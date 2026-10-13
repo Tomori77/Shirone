@@ -46,6 +46,8 @@ jobs:
       CI: true
       # 让 content:sync 走「本地目录」模式（内容由下面的 checkout 取得）。
       CONTENT_DIR: .content-src
+      # if 条件不能引用 secrets，故在此算出「是否存在 CF 令牌」标记。
+      HAS_CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
 
     steps:
       - name: Resolve content ref
@@ -96,7 +98,7 @@ jobs:
 
       - name: Deploy to Cloudflare Pages
         # 未配置 CLOUDFLARE_API_TOKEN 时跳过部署（构建仍会执行），配置后自动生效。
-        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+        if: ${{ env.HAS_CLOUDFLARE_TOKEN == 'true' }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
