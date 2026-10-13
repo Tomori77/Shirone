@@ -96,6 +96,8 @@ jobs:
         node: [22, 24]
     env:
       CI: true
+      # 主题仓自带 CI 用「本地模式」构建，不去拉取外部内容仓（内容分离由部署侧负责）。
+      SHIRONE_CONTENT_SYNC: "0"
 
     steps:
       - name: Checkout
